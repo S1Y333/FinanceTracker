@@ -55,8 +55,8 @@ category_rent_combo_box = ttk.Combobox(root, values=["Expense", "Income"])
 category_rent_combo_box.pack(pady=5)
 
 # Groceries input
-Groceries_label = tk.Label(root, text="Groceries")
-Groceries_label.pack()
+groceries_label = tk.Label(root, text="Groceries")
+groceries_label.pack()
 entry_groceries = tk.Entry(root, width=30)
 entry_groceries.pack(pady=2)
 category_groceries_label = tk.Label(root, text="Category: ")
