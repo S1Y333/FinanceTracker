@@ -35,7 +35,8 @@ root.title("Budget Tracker")
 root.geometry("1000x1000")
 
 # salary input
-tk.Label(root, text="Salary:").pack()
+salary_label = tk.Label(root, text="Salary")
+salary_label.pack()
 entry_salary = tk.Entry(root, width=30)
 entry_salary.pack(pady=2)
 category_salary_label = tk.Label(root, text="Category: ")
@@ -44,7 +45,8 @@ category_salary_combo_box = ttk.Combobox(root, values=["Expense", "Income"])
 category_salary_combo_box.pack(pady=5)
 
 # Rent input
-tk.Label(root, text="Rent:").pack()
+rent_label = tk.Label(root, text="Rent")
+rent_label.pack()
 entry_rent = tk.Entry(root, width=30)
 entry_rent.pack(pady=2)
 category_rent_label = tk.Label(root, text="Category: ")
@@ -53,7 +55,8 @@ category_rent_combo_box = ttk.Combobox(root, values=["Expense", "Income"])
 category_rent_combo_box.pack(pady=5)
 
 # Groceries input
-tk.Label(root, text="Groceries:").pack()
+Groceries_label = tk.Label(root, text="Groceries")
+Groceries_label.pack()
 entry_groceries = tk.Entry(root, width=30)
 entry_groceries.pack(pady=2)
 category_groceries_label = tk.Label(root, text="Category: ")
@@ -63,7 +66,8 @@ category_groceries_combo_box.set("Expense")
 category_groceries_combo_box.pack(pady=5)
 
 # Transport input
-tk.Label(root, text="Transport:").pack()
+transport_label = tk.Label(root, text="Transport")
+transport_label.pack()
 entry_transport = tk.Entry(root, width=30)
 entry_transport.pack(pady=2)
 category_transport_label = tk.Label(root, text="Category: ")
@@ -100,13 +104,13 @@ def add_entry():
 
     # Add entries to the treeview
     if salary_amount:
-        tree.insert("", "end", values=(salary_category, salary_amount))
+        tree.insert("", "end", values=(salary_category, salary_label.cget("text"),  salary_amount))
     if rent_amount:
-        tree.insert("", "end", values=(rent_category, rent_amount))
+        tree.insert("", "end", values=(rent_category,rent_label.cget("text"), rent_amount))
     if groceries_amount:
-        tree.insert("", "end", values=(groceries_category, groceries_amount))
+        tree.insert("", "end", values=(groceries_category, groceries_label.cget("text"), groceries_amount))
     if transport_amount:
-        tree.insert("", "end", values=(transport_category, transport_amount))
+        tree.insert("", "end", values=(transport_category, transport_label.cget("text"), transport_amount))
 
     # calculate each category total
     totals = {"Expense": 0, "Income": 0}
