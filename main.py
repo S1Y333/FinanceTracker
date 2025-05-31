@@ -3,20 +3,23 @@ from tkinter import ttk
 from chart import switch_frame, show_expense_pie, show_income_vs_expense
 
 # todo: add two tabs one for add entries and one for viewing charts using sample data- done
-# 
-
+# todo: use real data user entered in the entry frame to populate the charts - done
+# todo: add a summary of total income and expenses in the entry frame - done
+# todo: allow user to edit entries in the table
 # todo: add alert for overspending
 
 # todo: allow user to add new categories and subcategories
 
 # Example data
-records = [
-    ("Expense", "Rent", 1200),
-    ("Expense", "Groceries", 300),
-    ("Expense", "Clothing", 150),
-    ("Income", "Salary", 3000),
-    ("Income", "Bonus", 500)
-]
+# records = [
+#     ("Expense", "Rent", 1200),
+#     ("Expense", "Groceries", 300),
+#     ("Expense", "Clothing", 150),
+#     ("Income", "Salary", 3000),
+#     ("Income", "Bonus", 500)
+# ]
+
+records = []  # Initialize records as an empty list
 
 # Create the window
 root = tk.Tk()
@@ -42,7 +45,7 @@ root.config(menu=menubar)
 # Create a records menu
 record_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Records', menu=record_menu)
-record_menu.add_command(label="Add Entry", command=lambda: [switch_frame(entry_frame, chart_frame), add_entry()])
+record_menu.add_command(label="Add Entry", command=lambda: [switch_frame(entry_frame, chart_frame)])
 record_menu.add_separator()
 record_menu.add_command(label='Exit', command=root.quit)
 # Create a chart menu
@@ -50,21 +53,6 @@ chart_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label='Charts', menu=chart_menu)
 chart_menu.add_command(label="Show Expense Pie Chart", command=lambda: [switch_frame(chart_frame, entry_frame), show_expense_pie(records, chart_frame)])
 chart_menu.add_command(label="Show Income vs Expense", command=lambda: [switch_frame(chart_frame, entry_frame), show_income_vs_expense(records, chart_frame)])
-
-def calculate_total():
-    try:
-        income = float(entry_income.get())
-        rent = float(entry_rent.get())
-        groceries = float(entry_groceries.get())
-        transport = float(entry_transport.get())
-
-        total_expenses = rent + groceries + transport
-        balance = income - total_expenses
-
-        label_result.config(text=f"Total expenses: ${total_expenses:.2f}\nBalance: ${balance:.2f}")
-
-    except ValueError:
-        label_result.config(text="Please enter valid numbers.")
 
 
 
@@ -124,47 +112,59 @@ summary_label = tk.Label(entry_frame, text="")
 summary_label.pack(pady=10)
 
 # add functions 
+def calculate_total():
+    try:
+        income = float(entry_salary.get())
+        rent = float(entry_rent.get())
+        groceries = float(entry_groceries.get())
+        transport = float(entry_transport.get())
+
+        total_expenses = rent + groceries + transport
+        balance = income - total_expenses
+
+        summary_label.config(text=f"Total expenses: ${total_expenses:.2f}\nBalance: ${balance:.2f}")
+
+    except ValueError:
+        summary_label.config(text="Please enter valid numbers.")
+
+
 def add_entry():
     switch_frame(entry_frame, chart_frame)
+
     salary_category = category_salary_combo_box.get()
     salary_amount = entry_salary.get()
+    salary_label_text = salary_label.cget("text")
 
     rent_category = category_transport_combo_box.get()
     rent_amount = entry_rent.get()
+    rent_label_text = rent_label.cget("text")
     
     groceries_category = category_groceries_combo_box.get()
     groceries_amount = entry_groceries.get()
+    groceries_label_text = groceries_label.cget("text")
     
     
     transport_amount = entry_transport.get()
     transport_category = category_transport_combo_box.get()
+    transport_label_text = transport_label.cget("text")
 
     # Add entries to the treeview
     if salary_amount:
-        tree.insert("", "end", values=(salary_category, salary_label.cget("text"),  salary_amount))
+        tree.insert("", "end", values=(salary_category, salary_label_text, salary_amount))
+        records.append((salary_category, salary_label_text, float(salary_amount)))
     if rent_amount:
-        tree.insert("", "end", values=(rent_category,rent_label.cget("text"), rent_amount))
+        tree.insert("", "end", values=(rent_category, rent_label_text, rent_amount))
+        records.append((rent_category, rent_label_text, float(rent_amount)))
     if groceries_amount:
-        tree.insert("", "end", values=(groceries_category, groceries_label.cget("text"), groceries_amount))
+        tree.insert("", "end", values=(groceries_category, groceries_label_text, groceries_amount))
+        records.append((groceries_category, groceries_label_text, float(groceries_amount)))
     if transport_amount:
-        tree.insert("", "end", values=(transport_category, transport_label.cget("text"), transport_amount))
+        tree.insert("", "end", values=(transport_category, transport_label_text, transport_amount))
+        records.append((transport_category, transport_label_text, float(transport_amount)))
 
-    # calculate each category total
-    totals = {"Expense": 0, "Income": 0}
-    for item in tree.get_children():
-        category, amount = tree.item(item, "values")
-        try:
-            amount = float(amount)
-        except ValueError:
-            continue  # Skip if amount is not a valid number
-        if category not in totals:
-            totals[category] = 0
-        totals[category] += amount
+    calculate_total()
     # Update summary label
-    summary_label.config(text=f"Total Income: ${totals.get('Income', 0):.2f}, Total Expenses: ${totals.get('Expense', 0):.2f}")
-
-
-   
+    # summary_label.config(text=f"Total Income: ${totals.get('Income', 0):.2f}, Total Expenses: ${totals.get('Expense', 0):.2f}")
 
 
 # Bind event to selection
