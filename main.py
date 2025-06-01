@@ -7,7 +7,6 @@ from chart import switch_frame, show_expense_pie, show_income_vs_expense
 # todo: add a summary of total income and expenses in the entry frame - done
 # todo: allow user to edit entries in the table
 # todo: add alert for overspending
-
 # todo: allow user to add new categories and subcategories
 
 # Example data
