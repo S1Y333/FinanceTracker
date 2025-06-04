@@ -7,7 +7,9 @@ from editTable import EditableTreeview
 # todo: add two tabs one for add entries and one for viewing charts using sample data- done
 # todo: use real data user entered in the entry frame to populate the charts - done
 # todo: add a summary of total income and expenses in the entry frame - done
-# todo: allow user to edit entries in the table
+# todo: allow user to edit entries in the table -done
+# todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
+# todo: refresh chart and summary when new entries are added
 # todo: add alert for overspending
 # todo: allow user to add new categories and subcategories
 
@@ -72,6 +74,7 @@ class MainApplication(tk.Tk):
         self.category_salary_label = tk.Label(self.entry_frame, text="Category: ")
         self.category_salary_label.pack(pady=10)
         self.category_salary_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
+        self.category_salary_combo_box.set("Income")
         self.category_salary_combo_box.pack(pady=5)
 
         # Rent input
@@ -82,6 +85,7 @@ class MainApplication(tk.Tk):
         self.category_rent_label = tk.Label(self.entry_frame, text="Category: ")
         self.category_rent_label.pack(pady=10)
         self.category_rent_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
+        self.category_rent_combo_box.set("Expense")
         self.category_rent_combo_box.pack(pady=5)
 
         # Groceries input
@@ -109,7 +113,8 @@ class MainApplication(tk.Tk):
     def create_treeview_table(self):
         # Create a treeview to display records
         # Use EditableTreeview instead of ttk.Treeview
-        self.tree = EditableTreeview(self.entry_frame, columns=("Category", "Subcategory", "Amount"), show='headings')
+        # set up columns that will be editable
+        self.tree = EditableTreeview(self.entry_frame, columns=("Category", "Subcategory", "Amount"), editable_columns=['Amount'], show='headings')
         self.tree.heading("Category", text="Category")
         self.tree.heading("Subcategory", text="Subcategory")
         self.tree.heading("Amount", text="Amount")

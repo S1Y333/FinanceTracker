@@ -4,8 +4,9 @@ from tkinter import ttk
 # use function to edit table entries
 
 class EditableTreeview(ttk.Treeview):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master,editable_columns=None, **kwargs):
         super().__init__(master, **kwargs)
+        self.editable_columns = editable_columns or self['columns']
         self.bind('<Double-1>', self.on_double_click)
         self.entry = None
         self.current_item = None
@@ -22,6 +23,14 @@ class EditableTreeview(ttk.Treeview):
         
         # Don't edit if it's a heading click
         if item == '':
+            return
+        
+         # Convert "#2" → 1 → 'Name'
+        col_index = int(column[1:]) - 1
+        col_name = self['columns'][col_index]
+    
+        # Skip non-editable columns
+        if col_name not in self.editable_columns:
             return
             
         self.start_edit(item, column)
@@ -75,3 +84,5 @@ class EditableTreeview(ttk.Treeview):
             self.entry = None
             self.current_item = None
             self.current_column = None
+    
+    
