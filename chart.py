@@ -40,11 +40,13 @@ def show_income_vs_expense(records, chart_frame):
 def show_chart(fig, chart_frame):
     canvas = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas.draw()
-    canvas.get_tk_widget().pack()
+    canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+    chart_frame.grid_rowconfigure(0, weight=1)
+    chart_frame.grid_columnconfigure(0, weight=1)
 
 def switch_frame(show_frame, hide_frame):
-    hide_frame.pack_forget()
-    show_frame.pack(fill=tk.BOTH, expand=True)
+    hide_frame.grid_remove()
+    show_frame.grid(row=0, column=0, sticky="nsew")
 
     # this only clears the frame, not the widgets inside it
     # for widget in frame.winfo_children():
