@@ -10,10 +10,12 @@ from editTable import EditableTreeview
 # todo: allow user to edit entries in the table -done
 # todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
 # todo: refresh chart and summary when new entries are added - done
+# todo: how to change the layout of the entry frame to have a better user experience - done
 # todo: set the non-editable columns to be a different color to indicate they are not editable
-# todo: how to change the layout of the entry frame to have a better user experience
 # todo: add alert for overspending
-# todo: allow user to add new categories and subcategories
+# todo: allow user to add new subcategories
+# todo: update readme file 
+# optional: add AI feature to provide insights on spending habits
 
 # Example data
 # records = [
@@ -28,7 +30,7 @@ class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
-        self.geometry("500x500")
+        self.geometry("700x500")
         self.records = []  # Initialize records as an empty list
 
         # Create a canvas and a vertical scrollbar for the entry frame
@@ -72,7 +74,7 @@ class MainApplication(tk.Tk):
 
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=6, column=0, columnspan=4, pady=5)
+        self.add_entry_button.grid(row=8, column=0, columnspan=4, pady=5)
 
     def create_menu(self):
         # add menu bar
@@ -136,9 +138,11 @@ class MainApplication(tk.Tk):
         self.category_transport_combo_box.grid(row=3, column=3, padx=10, pady=5)
         
     def create_treeview_table(self):
+        self.tips_label = tk.Label(self.entry_frame, text="You can edit the amount column by double-clicking on it.")
+        self.tips_label.grid(row=5, column=0, columnspan=4, pady=(0, 10))
 
         tree_frame = tk.Frame(self.entry_frame)
-        tree_frame.grid(row=4, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
+        tree_frame.grid(row=6, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
         
         # Configure grid weights for resizing
         self.entry_frame.grid_rowconfigure(4, weight=1)
@@ -160,10 +164,13 @@ class MainApplication(tk.Tk):
         self.tree.heading("Subcategory", text="Subcategory")
         self.tree.heading("Amount", text="Amount")
         self.tree.grid(row=0, column=0, sticky="nsew")
+        
+       
+
 
         # Summary label
         self.summary_label = tk.Label(self.entry_frame, text="")
-        self.summary_label.grid(row=5, column=0, columnspan=4, pady=10)
+        self.summary_label.grid(row=7, column=0, columnspan=4, pady=10)
 
     # cacualate total expenses and balance 
     def calculate_total(self):
