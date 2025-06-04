@@ -9,7 +9,8 @@ from editTable import EditableTreeview
 # todo: add a summary of total income and expenses in the entry frame - done
 # todo: allow user to edit entries in the table -done
 # todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
-# todo: refresh chart and summary when new entries are added
+# todo: refresh chart and summary when new entries are added - done
+# todo: set the non-editable columns to be a different color to indicate they are not editable
 # todo: how to change the layout of the entry frame to have a better user experience
 # todo: add alert for overspending
 # todo: allow user to add new categories and subcategories
@@ -27,7 +28,7 @@ class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
-        self.geometry("1000x1800")
+        self.geometry("500x500")
         self.records = []  # Initialize records as an empty list
 
         # Create a canvas and a vertical scrollbar for the entry frame
@@ -149,7 +150,12 @@ class MainApplication(tk.Tk):
         # Use EditableTreeview instead of ttk.Treeview
         # set up columns that will be editable
 
-        self.tree = EditableTreeview(tree_frame, columns=("Category", "Subcategory", "Amount"), editable_columns=['Amount'], show='headings')
+        self.tree = EditableTreeview(
+            tree_frame, 
+            columns=("Category", "Subcategory", "Amount"), 
+            editable_columns=['Amount'], 
+            show='headings',
+            on_cell_edit=self.on_table_edit)
         self.tree.heading("Category", text="Category")
         self.tree.heading("Subcategory", text="Subcategory")
         self.tree.heading("Amount", text="Amount")
@@ -174,7 +180,21 @@ class MainApplication(tk.Tk):
 
         except ValueError:
             self.summary_label.config(text="Please enter valid numbers.")
-     
+    
+    def calculate_total(self):
+        try:
+            total_income = sum(r[2] for r in self.records if r[0] == "Income")
+            total_expenses = sum(r[2] for r in self.records if r[0] == "Expense")
+            balance = total_income - total_expenses
+
+            self.summary_label.config(
+                text=f"Total income: ${total_income:.2f}\n"
+                    f"Total expenses: ${total_expenses:.2f}\n"
+                    f"Balance: ${balance:.2f}"
+            )
+        except Exception as e:
+            self.summary_label.config(text="Error calculating summary.")
+
     def add_entry(self):
         switch_frame(self.entry_frame, self.chart_frame)
 
@@ -210,7 +230,18 @@ class MainApplication(tk.Tk):
             self.records.append((self.transport_category, self.transport_label_text, float(self.transport_amount)))
 
         self.calculate_total()
-
+    def on_table_edit(self, item_id, column, new_value):
+        # Find the index of the item in the treeview
+        item_index = self.tree.index(item_id)
+        # Update the corresponding record in self.records
+        record = list(self.records[item_index])
+        if column == "Amount":
+            try:
+                record[2] = float(new_value)
+            except ValueError:
+                record[2] = 0
+        self.records[item_index] = tuple(record)
+        self.calculate_total()
     
     
 if __name__ == "__main__":

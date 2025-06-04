@@ -4,9 +4,10 @@ from tkinter import ttk
 # use function to edit table entries
 
 class EditableTreeview(ttk.Treeview):
-    def __init__(self, master,editable_columns=None, **kwargs):
+    def __init__(self, master,editable_columns=None, on_cell_edit=None, **kwargs):
         super().__init__(master, **kwargs)
         self.editable_columns = editable_columns or self['columns']
+        self.on_cell_edit = on_cell_edit
         self.bind('<Double-1>', self.on_double_click)
         self.entry = None
         self.current_item = None
@@ -72,6 +73,9 @@ class EditableTreeview(ttk.Treeview):
         if self.entry and self.current_item and self.current_column:
             new_value = self.entry.get()
             self.set(self.current_item, self.current_column, new_value)
+            # Call the callback with item id, column, and new value
+            if self.on_cell_edit:
+                self.on_cell_edit(self.current_item, self.current_column, new_value)
             self.entry.destroy()
             self.entry = None
             self.current_item = None
