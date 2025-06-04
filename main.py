@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from chart import switch_frame, show_expense_pie, show_income_vs_expense
-
+from editTable import EditableTreeview
 
 # revise to OOP style, Remember to access/modify the records only through your MainApplication methods to maintain data integrity.
 # todo: add two tabs one for add entries and one for viewing charts using sample data- done
@@ -37,15 +37,15 @@ class MainApplication(tk.Tk):
         # create menu bar
         self.create_menu()
 
-        # add a add entry button to the entry frame,need to assign it to self, so we can access it later
-        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.pack(pady=5)
-
         # Add widgets to entry frame
         self.create_entry_widgets()
 
         # Create the treeview table 
         self.create_treeview_table()
+
+        # add a add entry button to the entry frame,need to assign it to self, so we can access it later
+        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
+        self.add_entry_button.pack(pady=5)
 
     def create_menu(self):
         # add menu bar
@@ -108,7 +108,8 @@ class MainApplication(tk.Tk):
 
     def create_treeview_table(self):
         # Create a treeview to display records
-        self.tree = ttk.Treeview(self.entry_frame, columns=("Category", "Subcategory", "Amount"), show='headings')
+        # Use EditableTreeview instead of ttk.Treeview
+        self.tree = EditableTreeview(self.entry_frame, columns=("Category", "Subcategory", "Amount"), show='headings')
         self.tree.heading("Category", text="Category")
         self.tree.heading("Subcategory", text="Subcategory")
         self.tree.heading("Amount", text="Amount")

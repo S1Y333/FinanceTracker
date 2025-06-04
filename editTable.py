@@ -1,6 +1,77 @@
-
+import tkinter as tk
+from tkinter import ttk
 
 # use function to edit table entries
 
-def edit_table_entries(table):
+class EditableTreeview(ttk.Treeview):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self.bind('<Double-1>', self.on_double_click)
+        self.entry = None
+        self.current_item = None
+        self.current_column = None
+        
+    def on_double_click(self, event):
+        """Handle double-click event"""
+        region_clicked = self.identify_region(event.x, event.y)
+        if region_clicked not in ('cell', 'tree'):
+            return
+        
+        column = self.identify_column(event.x)
+        item = self.identify_row(event.y)
+        
+        # Don't edit if it's a heading click
+        if item == '':
+            return
+            
+        self.start_edit(item, column)
     
+    def start_edit(self, item, column):
+        """Start editing a cell"""
+        # Destroy any existing entry widget
+        if self.entry:
+            self.entry.destroy()
+            
+        # Get column info
+        col_index = int(column[1:]) - 1
+        col_name = self['columns'][col_index]
+        
+        # Get cell position and value
+        x, y, width, height = self.bbox(item, column)
+        value = self.set(item, column)
+        
+        # Create entry widget
+        self.entry = ttk.Entry(self)
+        self.entry.place(x=x, y=y, width=width, height=height)
+        
+        # Insert current value and select all
+        self.entry.insert(0, value)
+        self.entry.select_range(0, tk.END)
+        self.entry.focus()
+        
+        # Save references
+        self.current_item = item
+        self.current_column = col_name
+        
+        # Bind events
+        self.entry.bind('<Return>', self.save_edit)
+        self.entry.bind('<Escape>', self.cancel_edit)
+        self.entry.bind('<FocusOut>', self.save_edit)
+    
+    def save_edit(self, event=None):
+        """Save the edited value"""
+        if self.entry and self.current_item and self.current_column:
+            new_value = self.entry.get()
+            self.set(self.current_item, self.current_column, new_value)
+            self.entry.destroy()
+            self.entry = None
+            self.current_item = None
+            self.current_column = None
+    
+    def cancel_edit(self, event=None):
+        """Cancel editing"""
+        if self.entry:
+            self.entry.destroy()
+            self.entry = None
+            self.current_item = None
+            self.current_column = None
