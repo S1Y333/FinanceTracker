@@ -10,6 +10,7 @@ from editTable import EditableTreeview
 # todo: allow user to edit entries in the table -done
 # todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
 # todo: refresh chart and summary when new entries are added
+# todo: how to change the layout of the entry frame to have a better user experience
 # todo: add alert for overspending
 # todo: allow user to add new categories and subcategories
 
@@ -29,12 +30,35 @@ class MainApplication(tk.Tk):
         self.geometry("1000x1800")
         self.records = []  # Initialize records as an empty list
 
-        # create frames
-        # Having two frames (entry_frame, chart_frame) 
+        # Create a canvas and a vertical scrollbar for the entry frame
+        self.entry_canvas = tk.Canvas(self, bg="lightgray")
+        self.entry_scrollbar = tk.Scrollbar(self, orient="vertical", command=self.entry_canvas.yview)
+        self.entry_canvas.configure(yscrollcommand=self.entry_scrollbar.set)
+
+        # Use grid for the canvas and scrollbar
+        self.entry_canvas.grid(row=0, column=0, sticky="nsew")
+        self.entry_scrollbar.grid(row=0, column=1, sticky="ns")
+
+        # Configure root grid weights
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        # Create a frame inside the canvas
+        self.entry_frame = tk.Frame(self.entry_canvas, bg="lightgray")
+        self.entry_canvas.create_window((0, 0), window=self.entry_frame, anchor="nw")
+
+        # Make sure the canvas scrolls when the frame size changes
+        self.entry_frame.bind(
+            "<Configure>",
+            lambda e: self.entry_canvas.configure(
+                scrollregion=self.entry_canvas.bbox("all")
+            )
+        )
+
+        # Chart frame (hidden initially)
         self.chart_frame = tk.Frame(self, bg="white")
-        self.entry_frame = tk.Frame(self, bg="lightgray")
-        self.entry_frame.pack(fill=tk.BOTH, expand=True)
-        self.chart_frame.pack_forget() # Hide chart frame initially
+        self.chart_frame.grid(row=0, column=0, sticky="nsew")
+        self.chart_frame.grid_remove()  # Hide chart frame initially
 
         # create menu bar
         self.create_menu()
@@ -45,9 +69,9 @@ class MainApplication(tk.Tk):
         # Create the treeview table 
         self.create_treeview_table()
 
-        # add a add entry button to the entry frame,need to assign it to self, so we can access it later
+        # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.pack(pady=5)
+        self.add_entry_button.grid(row=6, column=0, columnspan=4, pady=5)
 
     def create_menu(self):
         # add menu bar
@@ -66,63 +90,74 @@ class MainApplication(tk.Tk):
         chart_menu.add_command(label="Show Income vs Expense", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_income_vs_expense(self.records, self.chart_frame)])
 
     def create_entry_widgets(self):
-        # salary input
-        self.salary_label = tk.Label(self.entry_frame, text="Salary") # Use entry_frame to avoid confusion with the chart_frame
-        self.salary_label.pack()
+        # Salary input
+        self.salary_label = tk.Label(self.entry_frame, text="Salary")
+        self.salary_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
         self.entry_salary = tk.Entry(self.entry_frame, width=30)
-        self.entry_salary.pack(pady=2)
-        self.category_salary_label = tk.Label(self.entry_frame, text="Category: ")
-        self.category_salary_label.pack(pady=10)
+        self.entry_salary.grid(row=0, column=1, padx=10, pady=5)
+        self.category_salary_label = tk.Label(self.entry_frame, text="Category:")
+        self.category_salary_label.grid(row=0, column=2, padx=10, pady=5, sticky="e")
         self.category_salary_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
         self.category_salary_combo_box.set("Income")
-        self.category_salary_combo_box.pack(pady=5)
+        self.category_salary_combo_box.grid(row=0, column=3, padx=10, pady=5)
 
         # Rent input
         self.rent_label = tk.Label(self.entry_frame, text="Rent")
-        self.rent_label.pack()
+        self.rent_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
         self.entry_rent = tk.Entry(self.entry_frame, width=30)
-        self.entry_rent.pack(pady=2)
-        self.category_rent_label = tk.Label(self.entry_frame, text="Category: ")
-        self.category_rent_label.pack(pady=10)
+        self.entry_rent.grid(row=1, column=1, padx=10, pady=5)
+        self.category_rent_label = tk.Label(self.entry_frame, text="Category:")
+        self.category_rent_label.grid(row=1, column=2, padx=10, pady=5, sticky="e")
         self.category_rent_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
         self.category_rent_combo_box.set("Expense")
-        self.category_rent_combo_box.pack(pady=5)
+        self.category_rent_combo_box.grid(row=1, column=3, padx=10, pady=5)
 
         # Groceries input
         self.groceries_label = tk.Label(self.entry_frame, text="Groceries")
-        self.groceries_label.pack()
+        self.groceries_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
         self.entry_groceries = tk.Entry(self.entry_frame, width=30)
-        self.entry_groceries.pack(pady=2)
-        self.category_groceries_label = tk.Label(self.entry_frame, text="Category: ")
-        self.category_groceries_label.pack(pady=10)
+        self.entry_groceries.grid(row=2, column=1, padx=10, pady=5)
+        self.category_groceries_label = tk.Label(self.entry_frame, text="Category:")
+        self.category_groceries_label.grid(row=2, column=2, padx=10, pady=5, sticky="e")
         self.category_groceries_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
         self.category_groceries_combo_box.set("Expense")
-        self.category_groceries_combo_box.pack(pady=5)
+        self.category_groceries_combo_box.grid(row=2, column=3, padx=10, pady=5)
 
         # Transport input
         self.transport_label = tk.Label(self.entry_frame, text="Transport")
-        self.transport_label.pack()
+        self.transport_label.grid(row=3, column=0, padx=10, pady=5, sticky="e")
         self.entry_transport = tk.Entry(self.entry_frame, width=30)
-        self.entry_transport.pack(pady=2)
-        self.category_transport_label = tk.Label(self.entry_frame, text="Category: ")
-        self.category_transport_label.pack(pady=10)
+        self.entry_transport.grid(row=3, column=1, padx=10, pady=5)
+        self.category_transport_label = tk.Label(self.entry_frame, text="Category:")
+        self.category_transport_label.grid(row=3, column=2, padx=10, pady=5, sticky="e")
         self.category_transport_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
         self.category_transport_combo_box.set("Expense")
-        self.category_transport_combo_box.pack(pady=5)
-
+        self.category_transport_combo_box.grid(row=3, column=3, padx=10, pady=5)
+        
     def create_treeview_table(self):
+
+        tree_frame = tk.Frame(self.entry_frame)
+        tree_frame.grid(row=4, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
+        
+        # Configure grid weights for resizing
+        self.entry_frame.grid_rowconfigure(4, weight=1)
+        self.entry_frame.grid_columnconfigure(1, weight=1)
+        tree_frame.grid_rowconfigure(0, weight=1)
+        tree_frame.grid_columnconfigure(0, weight=1)
+
         # Create a treeview to display records
         # Use EditableTreeview instead of ttk.Treeview
         # set up columns that will be editable
-        self.tree = EditableTreeview(self.entry_frame, columns=("Category", "Subcategory", "Amount"), editable_columns=['Amount'], show='headings')
+
+        self.tree = EditableTreeview(tree_frame, columns=("Category", "Subcategory", "Amount"), editable_columns=['Amount'], show='headings')
         self.tree.heading("Category", text="Category")
         self.tree.heading("Subcategory", text="Subcategory")
         self.tree.heading("Amount", text="Amount")
-        self.tree.pack(pady=20)
+        self.tree.grid(row=0, column=0, sticky="nsew")
 
         # Summary label
         self.summary_label = tk.Label(self.entry_frame, text="")
-        self.summary_label.pack(pady=10)
+        self.summary_label.grid(row=5, column=0, columnspan=4, pady=10)
 
     # cacualate total expenses and balance 
     def calculate_total(self):
