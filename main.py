@@ -13,7 +13,7 @@ from tkinter import messagebox
 # todo: refresh chart and summary when new entries are added - done
 # todo: how to change the layout of the entry frame to have a better user experience - done
 # todo: set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
-# todo: add alert for overspending
+# todo: add alert for overspending -done
 # todo: update readme file 
 # todo: allow user to add new subcategories
 # optional: add AI feature to provide insights on spending habits
@@ -202,7 +202,7 @@ class MainApplication(tk.Tk):
                 messagebox.showinfo("Budget Alert", "You have balanced your budget!")
             elif balance > 0 and balance < 100:
                 messagebox.showinfo("Budget Alert", "You have a small surplus in your budget.")
-                
+
             self.summary_label.config(
                 text=f"Total income: ${total_income:.2f}\n"
                     f"Total expenses: ${total_expenses:.2f}\n"
