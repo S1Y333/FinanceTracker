@@ -14,7 +14,7 @@ from tkinter import messagebox
 # todo: how to change the layout of the entry frame to have a better user experience - done
 # todo: set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
 # todo: add alert for overspending -done
-# todo: update readme file 
+# todo: update readme file
 # todo: allow user to add new subcategories
 # optional: add AI feature to provide insights on spending habits
 

@@ -46,16 +46,30 @@ Of course, I have many ideas for the future features of this app, like AI insigh
 
 ### Built With
 
-TBD - This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+This project is built using python and a few libraries
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Matplotlib][Matplotlib-badge]][Matplotlib-url]
+* [![Tkinter][Tkinter-badge]][Tkinter-url]
+* [![ttk][ttk-badge]][ttk-url]
+* [![Messagebox][Messagebox-badge]][Messagebox-url]
+* [![Tk][Tk-badge]][Tk-url]
+
+<!-- Badge & Link Definitions -->
+
+[Matplotlib-badge]: https://img.shields.io/badge/Library-Matplotlib-orange
+[Matplotlib-url]: https://matplotlib.org/
+
+[Tkinter-badge]: https://img.shields.io/badge/GUI-Tkinter-blue
+[Tkinter-url]: https://docs.python.org/3/library/tkinter.html
+
+[ttk-badge]: https://img.shields.io/badge/Module-ttk-lightgrey
+[ttk-url]: https://docs.python.org/3/library/tkinter.ttk.html
+
+[Messagebox-badge]: https://img.shields.io/badge/Widget-messagebox-yellow
+[Messagebox-url]: https://docs.python.org/3/library/tkinter.messagebox.html
+
+[Tk-badge]: https://img.shields.io/badge/Core-Tk-red
+[Tk-url]: https://tcl.tk/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
