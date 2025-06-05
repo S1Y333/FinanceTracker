@@ -149,7 +149,7 @@ After installing the prerequisites and running the application (`python main.py`
 
 **Screenshots:**  
 
-![Start Screen](images/start.png)
+![Start Screen](images/startscreen.png)
 ![Data Entered](images/data_entered.png)
 ![Menu Screen](images/menu.png)
 ![Expense Pie Chart](images/pie_chart.png)
