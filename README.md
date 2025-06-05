@@ -147,8 +147,15 @@ After installing the prerequisites and running the application (`python main.py`
 
 ---
 
-**Example Screenshot:**  
-![App Screenshot](images/screenshot.png)
+**Screenshots:**  
+
+![Start Screen](images/start.png)
+![Data Entered](images/data_entered.png)
+![Menu Screen](images/menu.png)
+![Expense Pie Chart](images/pie_chart.png)
+![Income vs Expense Bar Chart](images/bar_chart.png)
+![Balance Reminder](images/balance_reminder.png)
+![Overspending Alert](images/overspending_alert.png)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -158,15 +165,21 @@ After installing the prerequisites and running the application (`python main.py`
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+- [x] Add an entry frame for users to input amounts
+- [x] Add a category dropdown for each entry
+- [x] Display a summary of total income and expenses in the entry frame
+- [x] Show user entries in a Treeview table
+- [x] Refactor `main.py` to use OOP style with a class for better code organization and data integrity
+- [x] Add chart functions to display an expense pie chart and an income vs. expense bar chart, using both sample and user-entered data
+- [x] Make the table editable, but restrict editing to the amount column only; improve usability with features like saving on focus loss and double-click to edit
+- [x] Automatically update the summary and charts when the user edits the table
+- [x] Separate the entry frame and chart frame, allowing users to switch between them instead of overlaying
+- [x] Add a top menu for switching between different frames
+- [x] Show message alerts for overspending or insufficient balance
+- [x] Change the layout to use `grid` instead of `pack` for better control and appearance
+- [ ] Allow users to add new subcategories
+- [ ] Add AI-powered insights on spending habits
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
