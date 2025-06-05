@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from chart import switch_frame, show_expense_pie, show_income_vs_expense
 from editTable import EditableTreeview
+from tkinter import messagebox
 
 # revise to OOP style, Remember to access/modify the records only through your MainApplication methods to maintain data integrity.
 # todo: add two tabs one for add entries and one for viewing charts using sample data- done
@@ -11,10 +12,10 @@ from editTable import EditableTreeview
 # todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
 # todo: refresh chart and summary when new entries are added - done
 # todo: how to change the layout of the entry frame to have a better user experience - done
-# todo: set the non-editable columns to be a different color to indicate they are not editable
+# todo: set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
 # todo: add alert for overspending
-# todo: allow user to add new subcategories
 # todo: update readme file 
+# todo: allow user to add new subcategories
 # optional: add AI feature to provide insights on spending habits
 
 # Example data
@@ -194,6 +195,14 @@ class MainApplication(tk.Tk):
             total_expenses = sum(r[2] for r in self.records if r[0] == "Expense")
             balance = total_income - total_expenses
 
+            # add alert message for overspending
+            if balance < 0:
+                messagebox.showwarning("Overspending Alert", "You have overspent your budget!")
+            elif balance == 0:
+                messagebox.showinfo("Budget Alert", "You have balanced your budget!")
+            elif balance > 0 and balance < 100:
+                messagebox.showinfo("Budget Alert", "You have a small surplus in your budget.")
+                
             self.summary_label.config(
                 text=f"Total income: ${total_income:.2f}\n"
                     f"Total expenses: ${total_expenses:.2f}\n"
