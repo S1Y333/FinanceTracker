@@ -5,16 +5,19 @@ from editTable import EditableTreeview
 from tkinter import messagebox
 
 # revise to OOP style, Remember to access/modify the records only through your MainApplication methods to maintain data integrity.
-# todo: add two tabs one for add entries and one for viewing charts using sample data- done
-# todo: use real data user entered in the entry frame to populate the charts - done
-# todo: add a summary of total income and expenses in the entry frame - done
-# todo: allow user to edit entries in the table -done
-# todo: revise editable table to only allow editing of the amount column, not category or subcategory - done
-# todo: refresh chart and summary when new entries are added - done
-# todo: how to change the layout of the entry frame to have a better user experience - done
-# todo: set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
-# todo: add alert for overspending -done
-# todo: update readme file
+# add two tabs one for add entries and one for viewing charts using sample data- done
+# use real data user entered in the entry frame to populate the charts - done
+# add a summary of total income and expenses in the entry frame - done
+# allow user to edit entries in the table -done
+# revise editable table to only allow editing of the amount column, not category or subcategory - done
+# refresh chart and summary when new entries are added - done
+# how to change the layout of the entry frame to have a better user experience - done
+# set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
+# add alert for overspending -done
+# update readme file -done
+# add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) - done
+# allow user to delete entries from the table and lose focus on the entry fields - done
+
 # todo: allow user to add new subcategories
 # optional: add AI feature to provide insights on spending habits
 
@@ -31,7 +34,7 @@ class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
-        self.geometry("700x500")
+        self.geometry("700x600")
         self.records = []  # Initialize records as an empty list
 
         # Create a canvas and a vertical scrollbar for the entry frame
@@ -73,10 +76,15 @@ class MainApplication(tk.Tk):
         # Create the treeview table 
         self.create_treeview_table()
 
+        # add a delete button fo
+        self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record)
+        self.delete_button.grid(row=8, column=2, columnspan=3, pady=5)
+        
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
         self.add_entry_button.grid(row=8, column=0, columnspan=4, pady=5)
 
+        
     def create_menu(self):
         # add menu bar
         menubar = tk.Menu(self)
@@ -173,22 +181,7 @@ class MainApplication(tk.Tk):
         self.summary_label = tk.Label(self.entry_frame, text="")
         self.summary_label.grid(row=7, column=0, columnspan=4, pady=10)
 
-    # cacualate total expenses and balance 
-    def calculate_total(self):
-        try:
-            income = float(self.entry_salary.get())
-            rent = float(self.entry_rent.get())
-            groceries = float(self.entry_groceries.get())
-            transport = float(self.entry_transport.get())
-
-            total_expenses = rent + groceries + transport
-            balance = income - total_expenses
-
-            self.summary_label.config(text=f"Total expenses: ${total_expenses:.2f}\nBalance: ${balance:.2f}")
-
-        except ValueError:
-            self.summary_label.config(text="Please enter valid numbers.")
-    
+    # cacualate total expenses and balance    
     def calculate_total(self):
         try:
             total_income = sum(r[2] for r in self.records if r[0] == "Income")
@@ -246,6 +239,20 @@ class MainApplication(tk.Tk):
             self.records.append((self.transport_category, self.transport_label_text, float(self.transport_amount)))
 
         self.calculate_total()
+
+        # clear the entry fields after adding an entry
+        self.entry_salary.delete(0, tk.END)
+        self.entry_rent.delete(0, tk.END)
+        self.entry_groceries.delete(0, tk.END)
+        self.entry_transport.delete(0, tk.END)
+        self.category_salary_combo_box.set("Income")
+        self.category_rent_combo_box.set("Expense")
+        self.category_groceries_combo_box.set("Expense")
+        self.category_transport_combo_box.set("Expense")
+
+        # lose focus on the entry fields
+        self.entry_frame.focus_set()
+
     def on_table_edit(self, item_id, column, new_value):
         # Find the index of the item in the treeview
         item_index = self.tree.index(item_id)
@@ -259,6 +266,19 @@ class MainApplication(tk.Tk):
         self.records[item_index] = tuple(record)
         self.calculate_total()
     
+    def delete_selected_record(self):
+        selected = self.tree.selection()
+
+        if not selected:
+            messagebox.showwarning("No selection", "Please select a record to delete.")
+            return
+        for item in selected:
+            index = self.tree.index(item)
+            self.tree.delete(item)
+            if index < len(self.records):
+                del self.records[index]
+
+        self.calculate_total()
     
 if __name__ == "__main__":
     app = MainApplication()
