@@ -180,7 +180,7 @@ After installing the prerequisites and running the application (`python main.py`
 - [x] Change the layout to use `grid` instead of `pack` for better control and appearance
 - [x] Allow user to delete entries from the table
 - [x] Empty the input after entry and lose focus on all the entry fields
-- [ ] Add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts)
+- [x] Add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts)
 - [ ] Allow users to add new subcategories
 - [ ] Add AI-powered insights on spending habits
 
