@@ -15,8 +15,8 @@ from tkinter import messagebox
 # set the non-editable columns to be a different color to indicate they are not editable - can't be done with ttk.Treeview, need to use a custom widget
 # add alert for overspending -done
 # update readme file -done
-# add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) - done
 # allow user to delete entries from the table and lose focus on the entry fields - done
+# add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) 
 
 # todo: allow user to add new subcategories
 # optional: add AI feature to provide insights on spending habits
@@ -78,13 +78,12 @@ class MainApplication(tk.Tk):
 
         # add a delete button fo
         self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record)
-        self.delete_button.grid(row=8, column=2, columnspan=3, pady=5)
+        self.delete_button.grid(row=9, column=2, columnspan=3, pady=5)
         
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=8, column=0, columnspan=4, pady=5)
-
-        
+        self.add_entry_button.grid(row=9, column=0, columnspan=4, pady=5)
+       
     def create_menu(self):
         # add menu bar
         menubar = tk.Menu(self)
@@ -102,10 +101,18 @@ class MainApplication(tk.Tk):
         chart_menu.add_command(label="Show Income vs Expense", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_income_vs_expense(self.records, self.chart_frame)])
 
     def create_entry_widgets(self):
+
+        # create validation tip label
+        self.validation_tips_label = tk.Label(self.entry_frame, text="", fg="red")
+        self.validation_tips_label.grid(row=5, column=0, columnspan=4, pady=(0, 10))
+
+        # set up validation for entry fields
+        vcmd = (self.register(self.validate_number), "%P")
+
         # Salary input
         self.salary_label = tk.Label(self.entry_frame, text="Salary")
         self.salary_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
-        self.entry_salary = tk.Entry(self.entry_frame, width=30)
+        self.entry_salary = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=vcmd)
         self.entry_salary.grid(row=0, column=1, padx=10, pady=5)
         self.category_salary_label = tk.Label(self.entry_frame, text="Category:")
         self.category_salary_label.grid(row=0, column=2, padx=10, pady=5, sticky="e")
@@ -116,7 +123,7 @@ class MainApplication(tk.Tk):
         # Rent input
         self.rent_label = tk.Label(self.entry_frame, text="Rent")
         self.rent_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
-        self.entry_rent = tk.Entry(self.entry_frame, width=30)
+        self.entry_rent = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=vcmd)
         self.entry_rent.grid(row=1, column=1, padx=10, pady=5)
         self.category_rent_label = tk.Label(self.entry_frame, text="Category:")
         self.category_rent_label.grid(row=1, column=2, padx=10, pady=5, sticky="e")
@@ -127,7 +134,7 @@ class MainApplication(tk.Tk):
         # Groceries input
         self.groceries_label = tk.Label(self.entry_frame, text="Groceries")
         self.groceries_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
-        self.entry_groceries = tk.Entry(self.entry_frame, width=30)
+        self.entry_groceries = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=vcmd)
         self.entry_groceries.grid(row=2, column=1, padx=10, pady=5)
         self.category_groceries_label = tk.Label(self.entry_frame, text="Category:")
         self.category_groceries_label.grid(row=2, column=2, padx=10, pady=5, sticky="e")
@@ -138,7 +145,7 @@ class MainApplication(tk.Tk):
         # Transport input
         self.transport_label = tk.Label(self.entry_frame, text="Transport")
         self.transport_label.grid(row=3, column=0, padx=10, pady=5, sticky="e")
-        self.entry_transport = tk.Entry(self.entry_frame, width=30)
+        self.entry_transport = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=vcmd)
         self.entry_transport.grid(row=3, column=1, padx=10, pady=5)
         self.category_transport_label = tk.Label(self.entry_frame, text="Category:")
         self.category_transport_label.grid(row=3, column=2, padx=10, pady=5, sticky="e")
@@ -147,11 +154,14 @@ class MainApplication(tk.Tk):
         self.category_transport_combo_box.grid(row=3, column=3, padx=10, pady=5)
         
     def create_treeview_table(self):
-        self.tips_label = tk.Label(self.entry_frame, text="You can edit the amount column by double-clicking on it.")
-        self.tips_label.grid(row=5, column=0, columnspan=4, pady=(0, 10))
-
+       
+        self.table_tips_label = tk.Label(
+        self.entry_frame,
+        text="- You can edit the amount column by double-clicking on it.\n- Select a record and click 'Delete Selected' to remove it.")
+        self.table_tips_label.grid(row=6, column=0, columnspan=4, pady=(20, 10))
+        
         tree_frame = tk.Frame(self.entry_frame)
-        tree_frame.grid(row=6, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
+        tree_frame.grid(row=7, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
         
         # Configure grid weights for resizing
         self.entry_frame.grid_rowconfigure(4, weight=1)
@@ -179,7 +189,7 @@ class MainApplication(tk.Tk):
 
         # Summary label
         self.summary_label = tk.Label(self.entry_frame, text="")
-        self.summary_label.grid(row=7, column=0, columnspan=4, pady=10)
+        self.summary_label.grid(row=8, column=0, columnspan=4, pady=10)
 
     # cacualate total expenses and balance    
     def calculate_total(self):
@@ -279,7 +289,20 @@ class MainApplication(tk.Tk):
                 del self.records[index]
 
         self.calculate_total()
-    
+
+    def validate_number(self, value):
+
+        # set the  validation_tips_label when user entered invalid input
+        if value == "" or value == ".":
+            return True  # Allow empty or just a dot (for typing floats)
+        try:
+            float(value)
+            self.validation_tips_label.config(text="")  # Clear tip if valid
+            return True
+        except ValueError:
+            self.validation_tips_label.config(text="Please enter a valid number." , fg="red")
+            return False  
+
 if __name__ == "__main__":
     app = MainApplication()
     app.mainloop()

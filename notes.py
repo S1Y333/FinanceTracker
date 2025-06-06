@@ -196,3 +196,25 @@ if __name__ == "__main__":
     tree.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
     
     root.mainloop()
+
+    #  explain: vcmd = (self.register(self.validate_number), "%P")
+
+    #     This line:
+
+    # is used to set up input validation for Tkinter Entry widgets. Here’s a detailed breakdown:
+
+    # 1. self.register(self.validate_number)
+    # self.validate_number is a method you defined to check if the input is a valid number.
+    # self.register(...) tells Tkinter to make this Python method callable from Tk’s internal validation system (which expects a Tcl function).
+    # The result is a reference to a Tcl wrapper for your Python function.
+    # 2. "%P"
+    # "%P" is a Tkinter substitution code.
+    # When validation is triggered, "%P" will be replaced with the new value of the entry field if the edit is allowed.
+    # This means your validate_number function will receive the would-be new value of the entry after the user types or deletes something.
+
+    # 3. The Tuple
+    # The tuple (self.register(self.validate_number), "%P") is how Tkinter expects you to pass the validation command and its arguments.
+    # When you set validatecommand=vcmd in your Entry, Tkinter will call your function with the new value every time the user types.
+    # Usage Example
+    # Every time the user types in self.entry_salary, Tkinter calls self.validate_number(new_value) where new_value is what the entry would become.
+    # If your function returns True, the change is allowed. If it returns False, the change is rejected.
