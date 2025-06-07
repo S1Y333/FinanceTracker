@@ -17,9 +17,10 @@ from tkinter import messagebox
 # update readme file -done
 # allow user to delete entries from the table and lose focus on the entry fields - done
 # add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) 
+# allow user to add a new subcategorie with amount and add into the table
+# when user add a new  entry to the table, it should include the new subcategories and amounts, also calculating, it needs to include the new subcategories in the summary and charts
 
-# todo: allow user to add new subcategories one at a time
-# todo: when user add a new  entry to the table, it should include the new subcategories and amounts, also calculating, it needs to include the new subcategories in the summary and charts
+# todo: download the data to a file
 # optional: add AI feature to provide insights on spending habits
 
 # Example data
@@ -35,7 +36,7 @@ class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
-        self.geometry("700x600")
+        self.geometry("700x700")
         self.records = []  # Initialize records as an empty list
 
         # Create a canvas and a vertical scrollbar for the entry frame
@@ -74,34 +75,19 @@ class MainApplication(tk.Tk):
         # Add widgets to entry frame
         self.create_entry_widgets()
 
-        # Allow user to add a new category and subcategory
-        self.add_new_subcategory()
-
         # Create the treeview table 
         self.create_treeview_table()
 
+        # Allow user to add a entry with a new subcategory name
+        self.add_new_subcategory()
+
         # add a delete button fo
         self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record)
-        self.delete_button.grid(row=12, column=2, columnspan=3, pady=5)
+        self.delete_button.grid(row=10, column=5, columnspan=3, pady=5)
         
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=12, column=0, columnspan=4, pady=5)
-
-    def add_new_subcategory(self):
-        new_subcategory = self.new_subcategory_entry.get().strip()
-        if new_subcategory:
-            # create a new input field with a label for the new subcategory and combobox of categories
-            new_label = tk.Label(self.entry_frame, text=new_subcategory)
-            new_label.grid(row=4, column=0, padx=10, pady=5, sticky="e")
-            new_entry = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=(self.register(self.validate_number), "%P"))
-            new_entry.grid(row=4, column=1, padx=10, pady=5)
-            new_category_label = tk.Label(self.entry_frame, text="Category:")
-            new_category_label.grid(row=4, column=2, padx=10, pady=5, sticky="e")
-            new_category_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
-            new_category_combo_box.set("Expense")
-            new_category_combo_box.grid(row=4, column=3, padx=10, pady=5)
-
+        self.add_entry_button.grid(row=5, column=0, columnspan=4, pady=5)
 
     def create_menu(self):
         # add menu bar
@@ -174,13 +160,29 @@ class MainApplication(tk.Tk):
         
         # Add a label for adding new sub categories
         self.new_subcategory_label = tk.Label(self.entry_frame, text="New Sub Category:")
-        self.new_subcategory_label.grid(row=5, column=0, padx=10, pady=5, sticky="e")
+        self.new_subcategory_label.grid(row=13, column=0, padx=10, pady=5, sticky="e")
         # Entry for new sub category name
         self.new_subcategory_entry = tk.Entry(self.entry_frame, width=20)
-        self.new_subcategory_entry.grid(row=5, column=1, padx=10, pady=5)
+        self.new_subcategory_entry.grid(row=13, column=1, padx=10, pady=5)
+
+        # add a label for entering Amount for the new subcategory
+        self.amount_new_subcategory_label = tk.Label(self.entry_frame, text="Amount:")
+        self.amount_new_subcategory_label.grid(row=13, column=2, padx=10, pady=5, sticky="e")
+        # Entry for amount for the new subcategory
+        self.amount_new_subcategory_entry = tk.Entry(self.entry_frame, width=20, validate="key", validatecommand=(self.register(self.validate_number), "%P"))
+        self.amount_new_subcategory_entry.grid(row=13, column=3, padx=10, pady=5)
+
+        self.category_new_subcategory_label = tk.Label(self.entry_frame, text="Category:")
+        self.category_new_subcategory_label.grid(row=16, column=0, padx=10, pady=5, sticky="e")
+
+        # Combobox for selecting category for the new subcategory
+        self.category_new_subcategory_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
+        self.category_new_subcategory_combo_box.set("Expense")  
+        self.category_new_subcategory_combo_box.grid(row=16, column=1, padx=10, pady=5)
+
         # Button to add the new category
-        self.add_category_button = tk.Button(self.entry_frame, text="Add New Sub Category", command=self.add_new_subcategory)
-        self.add_category_button.grid(row=5, column=2, padx=10, pady=5)
+        self.add_category_button = tk.Button(self.entry_frame, text="Add Entry with new Sub Category", command=self.add_new_subcategory)
+        self.add_category_button.grid(row=16, column=2, padx=10, pady=5, )
 
     def create_treeview_table(self):
        
@@ -291,6 +293,20 @@ class MainApplication(tk.Tk):
 
         # lose focus on the entry fields
         self.entry_frame.focus_set()
+
+    def add_new_subcategory(self):
+            new_subcategory = self.new_subcategory_entry.get().strip()
+            new_amount = self.amount_new_subcategory_entry.get().strip()
+            new_category = self.category_new_subcategory_combo_box.get().strip()
+
+            if new_subcategory and new_amount and new_category:
+                self.tree.insert("", "end", values=(new_category, new_subcategory, new_amount))
+                self.records.append((new_category, new_subcategory, float(new_amount)))
+                self.calculate_total()
+                # print(self.records)
+                # Clear the entry fields after adding a new subcategory
+                self.new_subcategory_entry.delete(0, tk.END)
+                self.amount_new_subcategory_entry.delete(0, tk.END)
 
     def on_table_edit(self, item_id, column, new_value):
         # Find the index of the item in the treeview
