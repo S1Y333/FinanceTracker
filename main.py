@@ -18,7 +18,8 @@ from tkinter import messagebox
 # allow user to delete entries from the table and lose focus on the entry fields - done
 # add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) 
 
-# todo: allow user to add new subcategories
+# todo: allow user to add new subcategories one at a time
+# todo: when user add a new  entry to the table, it should include the new subcategories and amounts, also calculating, it needs to include the new subcategories in the summary and charts
 # optional: add AI feature to provide insights on spending habits
 
 # Example data
@@ -73,17 +74,35 @@ class MainApplication(tk.Tk):
         # Add widgets to entry frame
         self.create_entry_widgets()
 
+        # Allow user to add a new category and subcategory
+        self.add_new_subcategory()
+
         # Create the treeview table 
         self.create_treeview_table()
 
         # add a delete button fo
         self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record)
-        self.delete_button.grid(row=9, column=2, columnspan=3, pady=5)
+        self.delete_button.grid(row=12, column=2, columnspan=3, pady=5)
         
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=9, column=0, columnspan=4, pady=5)
-       
+        self.add_entry_button.grid(row=12, column=0, columnspan=4, pady=5)
+
+    def add_new_subcategory(self):
+        new_subcategory = self.new_subcategory_entry.get().strip()
+        if new_subcategory:
+            # create a new input field with a label for the new subcategory and combobox of categories
+            new_label = tk.Label(self.entry_frame, text=new_subcategory)
+            new_label.grid(row=4, column=0, padx=10, pady=5, sticky="e")
+            new_entry = tk.Entry(self.entry_frame, width=30, validate="key", validatecommand=(self.register(self.validate_number), "%P"))
+            new_entry.grid(row=4, column=1, padx=10, pady=5)
+            new_category_label = tk.Label(self.entry_frame, text="Category:")
+            new_category_label.grid(row=4, column=2, padx=10, pady=5, sticky="e")
+            new_category_combo_box = ttk.Combobox(self.entry_frame, values=["Expense", "Income"])
+            new_category_combo_box.set("Expense")
+            new_category_combo_box.grid(row=4, column=3, padx=10, pady=5)
+
+
     def create_menu(self):
         # add menu bar
         menubar = tk.Menu(self)
@@ -104,7 +123,7 @@ class MainApplication(tk.Tk):
 
         # create validation tip label
         self.validation_tips_label = tk.Label(self.entry_frame, text="", fg="red")
-        self.validation_tips_label.grid(row=5, column=0, columnspan=4, pady=(0, 10))
+        self.validation_tips_label.grid(row=8, column=0, columnspan=4, pady=(0, 10))
 
         # set up validation for entry fields
         vcmd = (self.register(self.validate_number), "%P")
@@ -153,15 +172,25 @@ class MainApplication(tk.Tk):
         self.category_transport_combo_box.set("Expense")
         self.category_transport_combo_box.grid(row=3, column=3, padx=10, pady=5)
         
+        # Add a label for adding new sub categories
+        self.new_subcategory_label = tk.Label(self.entry_frame, text="New Sub Category:")
+        self.new_subcategory_label.grid(row=5, column=0, padx=10, pady=5, sticky="e")
+        # Entry for new sub category name
+        self.new_subcategory_entry = tk.Entry(self.entry_frame, width=20)
+        self.new_subcategory_entry.grid(row=5, column=1, padx=10, pady=5)
+        # Button to add the new category
+        self.add_category_button = tk.Button(self.entry_frame, text="Add New Sub Category", command=self.add_new_subcategory)
+        self.add_category_button.grid(row=5, column=2, padx=10, pady=5)
+
     def create_treeview_table(self):
        
         self.table_tips_label = tk.Label(
         self.entry_frame,
         text="- You can edit the amount column by double-clicking on it.\n- Select a record and click 'Delete Selected' to remove it.")
-        self.table_tips_label.grid(row=6, column=0, columnspan=4, pady=(20, 10))
+        self.table_tips_label.grid(row=9, column=0, columnspan=4, pady=(20, 10))
         
         tree_frame = tk.Frame(self.entry_frame)
-        tree_frame.grid(row=7, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
+        tree_frame.grid(row=10, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
         
         # Configure grid weights for resizing
         self.entry_frame.grid_rowconfigure(4, weight=1)
@@ -189,7 +218,7 @@ class MainApplication(tk.Tk):
 
         # Summary label
         self.summary_label = tk.Label(self.entry_frame, text="")
-        self.summary_label.grid(row=8, column=0, columnspan=4, pady=10)
+        self.summary_label.grid(row=11, column=0, columnspan=4, pady=10)
 
     # cacualate total expenses and balance    
     def calculate_total(self):
