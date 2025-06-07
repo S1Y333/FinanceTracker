@@ -181,7 +181,8 @@ After installing the prerequisites and running the application (`python main.py`
 - [x] Allow user to delete entries from the table
 - [x] Empty the input after entry and lose focus on all the entry fields
 - [x] Add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts)
-- [ ] Allow users to add new subcategories
+- [x] Allow users to add new subcategories and total and charts will refresh after new entries
+- [ ] Download into a file
 - [ ] Add AI-powered insights on spending habits
 
 
