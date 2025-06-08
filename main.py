@@ -36,7 +36,7 @@ class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
-        self.geometry("700x700")
+        self.geometry("850x800")
         self.records = []  # Initialize records as an empty list
 
         # Create a canvas and a vertical scrollbar for the entry frame
@@ -75,6 +75,13 @@ class MainApplication(tk.Tk):
         # Add widgets to entry frame
         self.create_entry_widgets()
 
+        # Add a divider line
+        divider1 = tk.Frame(self.entry_frame, height=2, bd=0, relief="ridge", bg="gray")
+        divider1.grid(row=9, column=0, columnspan=14, sticky="ew", pady=10)
+
+        divider2 = tk.Frame(self.entry_frame, height=2, bd=0, relief="ridge", bg="gray")
+        divider2.grid(row=13, column=0, columnspan=14, sticky="ew", pady=10)
+
         # Create the treeview table 
         self.create_treeview_table()
 
@@ -82,11 +89,11 @@ class MainApplication(tk.Tk):
         self.add_new_subcategory()
 
         # add a delete button fo
-        self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record)
-        self.delete_button.grid(row=10, column=5, columnspan=3, pady=5)
+        self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record, bg="red", fg="white")
+        self.delete_button.grid(row=11, column=5, columnspan=3, pady=5)
         
         # Add entry button to the entry frame
-        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry)
+        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry, bg="#4CAF50", fg="white")
         self.add_entry_button.grid(row=5, column=0, columnspan=4, pady=5)
 
     def create_menu(self):
@@ -108,8 +115,9 @@ class MainApplication(tk.Tk):
     def create_entry_widgets(self):
 
         # create validation tip label
-        self.validation_tips_label = tk.Label(self.entry_frame, text="", fg="red")
+        self.validation_tips_label = tk.Label(self.entry_frame, text="", fg="red", bg="lightgray")
         self.validation_tips_label.grid(row=8, column=0, columnspan=4, pady=(0, 10))
+
 
         # set up validation for entry fields
         vcmd = (self.register(self.validate_number), "%P")
@@ -158,19 +166,23 @@ class MainApplication(tk.Tk):
         self.category_transport_combo_box.set("Expense")
         self.category_transport_combo_box.grid(row=3, column=3, padx=10, pady=5)
         
+        # add a instruction label
+        self.instruction_label = tk.Label(self.entry_frame, text="You can add a new subcategory with amount", bg="lightgray")
+        self.instruction_label.grid(row=14, column=0, columnspan=10, pady=(10, 0))
+
         # Add a label for adding new sub categories
         self.new_subcategory_label = tk.Label(self.entry_frame, text="New Sub Category:")
-        self.new_subcategory_label.grid(row=13, column=0, padx=10, pady=5, sticky="e")
+        self.new_subcategory_label.grid(row=15, column=0, padx=10, pady=5, sticky="e")
         # Entry for new sub category name
         self.new_subcategory_entry = tk.Entry(self.entry_frame, width=20)
-        self.new_subcategory_entry.grid(row=13, column=1, padx=10, pady=5)
+        self.new_subcategory_entry.grid(row=15, column=1, padx=10, pady=5)
 
         # add a label for entering Amount for the new subcategory
         self.amount_new_subcategory_label = tk.Label(self.entry_frame, text="Amount:")
-        self.amount_new_subcategory_label.grid(row=13, column=2, padx=10, pady=5, sticky="e")
+        self.amount_new_subcategory_label.grid(row=15, column=2, padx=10, pady=5, sticky="e")
         # Entry for amount for the new subcategory
         self.amount_new_subcategory_entry = tk.Entry(self.entry_frame, width=20, validate="key", validatecommand=(self.register(self.validate_number), "%P"))
-        self.amount_new_subcategory_entry.grid(row=13, column=3, padx=10, pady=5)
+        self.amount_new_subcategory_entry.grid(row=15, column=3, padx=10, pady=5)
 
         self.category_new_subcategory_label = tk.Label(self.entry_frame, text="Category:")
         self.category_new_subcategory_label.grid(row=16, column=0, padx=10, pady=5, sticky="e")
@@ -181,18 +193,18 @@ class MainApplication(tk.Tk):
         self.category_new_subcategory_combo_box.grid(row=16, column=1, padx=10, pady=5)
 
         # Button to add the new category
-        self.add_category_button = tk.Button(self.entry_frame, text="Add Entry with new Sub Category", command=self.add_new_subcategory)
-        self.add_category_button.grid(row=16, column=2, padx=10, pady=5, )
+        self.add_category_button = tk.Button(self.entry_frame, text="Add Entry with new Sub Category", command=self.add_new_subcategory,bg="#4CAF50", fg="white") 
+        self.add_category_button.grid(row=16, column=3, padx=10, pady=5, )
 
     def create_treeview_table(self):
        
         self.table_tips_label = tk.Label(
         self.entry_frame,
         text="- You can edit the amount column by double-clicking on it.\n- Select a record and click 'Delete Selected' to remove it.")
-        self.table_tips_label.grid(row=9, column=0, columnspan=4, pady=(20, 10))
+        self.table_tips_label.grid(row=10, column=0, columnspan=4, pady=(20, 10))
         
         tree_frame = tk.Frame(self.entry_frame)
-        tree_frame.grid(row=10, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
+        tree_frame.grid(row=11, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
         
         # Configure grid weights for resizing
         self.entry_frame.grid_rowconfigure(4, weight=1)
@@ -219,8 +231,8 @@ class MainApplication(tk.Tk):
 
 
         # Summary label
-        self.summary_label = tk.Label(self.entry_frame, text="")
-        self.summary_label.grid(row=11, column=0, columnspan=4, pady=10)
+        self.summary_label = tk.Label(self.entry_frame, text="", bg="lightgray")
+        self.summary_label.grid(row=12, column=0, columnspan=4, pady=10)
 
     # cacualate total expenses and balance    
     def calculate_total(self):
