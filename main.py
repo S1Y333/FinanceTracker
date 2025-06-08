@@ -20,7 +20,7 @@ from tkinter import messagebox
 # allow user to add a new subcategorie with amount and add into the table
 # when user add a new  entry to the table, it should include the new subcategories and amounts, also calculating, it needs to include the new subcategories in the summary and charts
 
-# todo: download the data to a file
+# todo: download the report to a file
 # optional: add AI feature to provide insights on spending habits
 
 # Example data
@@ -109,8 +109,8 @@ class MainApplication(tk.Tk):
         # Create a chart menu
         chart_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label='Charts', menu=chart_menu)
-        chart_menu.add_command(label="Show Expense Pie Chart", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_expense_pie(self.records, self.chart_frame)])
-        chart_menu.add_command(label="Show Income vs Expense", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_income_vs_expense(self.records, self.chart_frame)])
+        chart_menu.add_command(label="Show Expense Pie Chart", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_expense_pie(self.records, self.chart_frame, self.entry_frame)])
+        chart_menu.add_command(label="Show Income vs Expense", command=lambda: [switch_frame(self.chart_frame, self.entry_frame), show_income_vs_expense(self.records, self.chart_frame, self.entry_frame)])
 
     def create_entry_widgets(self):
 

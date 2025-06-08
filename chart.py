@@ -2,12 +2,17 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from tkinter import messagebox
 
 
 
 
 # ===== Chart Functions =====
-def show_expense_pie(records, chart_frame):
+def show_expense_pie(records, chart_frame, entry_frame):
+    if not records:
+        messagebox.showwarning("No Data", "No records to display. Please add entries first.")
+        switch_frame(entry_frame, chart_frame)
+        return
     # Filter only expenses
     expense_data = {}
     for record in records:
@@ -23,7 +28,11 @@ def show_expense_pie(records, chart_frame):
 
     show_chart(fig, chart_frame)
 
-def show_income_vs_expense(records, chart_frame):
+def show_income_vs_expense(records, chart_frame, entry_frame):
+    if not records:
+        messagebox.showwarning("No Data", "No records to display. Please add entries first.")
+        switch_frame(entry_frame, chart_frame)
+        return
     # Calculate totals
     totals = {"Income": 0, "Expense": 0}
     for record in records:
