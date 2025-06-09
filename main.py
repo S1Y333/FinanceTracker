@@ -3,6 +3,11 @@ from tkinter import ttk
 from chart import switch_frame, show_expense_pie, show_income_vs_expense
 from editTable import EditableTreeview
 from tkinter import messagebox
+from chat_with_ai import SpendingAdvisorAI
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  
 
 # revise to OOP style, Remember to access/modify the records only through your MainApplication methods to maintain data integrity.
 # add two tabs one for add entries and one for viewing charts using sample data- done
@@ -19,8 +24,8 @@ from tkinter import messagebox
 # add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts) 
 # allow user to add a new subcategorie with amount and add into the table
 # when user add a new  entry to the table, it should include the new subcategories and amounts, also calculating, it needs to include the new subcategories in the summary and charts
+# Alert for no data in the charts
 
-# todo: download the report to a file
 # optional: add AI feature to provide insights on spending habits
 
 # Example data
@@ -32,12 +37,16 @@ from tkinter import messagebox
 #     ("Income", "Bonus", 500)
 # ]
 
+PROJECT_CONNECTION_STRING = os.getenv("PROJECT_CONNECTION_STRING")
+AGENT_ID = os.getenv("AGENT_ID")
+
 class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Finance Tracker")
         self.geometry("850x800")
         self.records = []  # Initialize records as an empty list
+        self.ai_agent = SpendingAdvisorAI(PROJECT_CONNECTION_STRING, AGENT_ID)
 
         # Create a canvas and a vertical scrollbar for the entry frame
         self.entry_canvas = tk.Canvas(self, bg="lightgray")
@@ -88,10 +97,19 @@ class MainApplication(tk.Tk):
         # Allow user to add a entry with a new subcategory name
         self.add_new_subcategory()
 
+        # add a frame for the delete button and get AI advice button
+        button_frame = tk.Frame(self.entry_frame, bg="lightgray")
+        button_frame.grid(row=11, column=5, rowspan=2, columnspan=3, pady=5, sticky="n")
+
         # add a delete button fo
-        self.delete_button = tk.Button(self.entry_frame, text="Delete Selected", command=self.delete_selected_record, bg="red", fg="white")
-        self.delete_button.grid(row=11, column=5, columnspan=3, pady=5)
-        
+        self.delete_button = tk.Button(
+        button_frame, text="Delete Selected", command=self.delete_selected_record, bg="red", fg="white")
+        self.delete_button.grid(row=0, column=0, pady=(0, 5), sticky="ew")
+
+        self.ai_advice_button = tk.Button(
+        button_frame, text="Get AI Advice", command=self.get_ai_advice, bg="#4CAF50", fg="white")
+        self.ai_advice_button.grid(row=1, column=0, pady=(5, 0), sticky="ew")
+
         # Add entry button to the entry frame
         self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry, bg="#4CAF50", fg="white")
         self.add_entry_button.grid(row=5, column=0, columnspan=4, pady=5)
@@ -227,12 +245,18 @@ class MainApplication(tk.Tk):
         self.tree.heading("Amount", text="Amount")
         self.tree.grid(row=0, column=0, sticky="nsew")
         
-       
-
-
         # Summary label
         self.summary_label = tk.Label(self.entry_frame, text="", bg="lightgray")
-        self.summary_label.grid(row=12, column=0, columnspan=4, pady=10)
+        self.summary_label.grid(row=12, column=0, columnspan=1, pady=10)
+
+        # add a label for displaying AI advice
+        self.ai_advice_label = tk.Label(self.entry_frame, text="", bg="lightgray", wraplength=400)
+        self.ai_advice_label.grid(row=12, column=3, columnspan=4, pady=(10, 0))
+
+    # get AI advice based on the records
+    def get_ai_advice(self):
+        advice = self.ai_agent.get_advice_from_records(self.records)
+        self.ai_advice_label.config(text=advice)
 
     # cacualate total expenses and balance    
     def calculate_total(self):

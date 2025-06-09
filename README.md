@@ -88,6 +88,7 @@ To get a local copy up and running follow these steps.
 Required Python packages:
 - `matplotlib`
 - (Optional, but recommended) `ttk` and `tkinter` are included with standard Python installations.
+- `python-dotenv`
 
 ### Installation
 
