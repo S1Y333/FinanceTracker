@@ -151,7 +151,7 @@ After installing the prerequisites and running the application (`python main.py`
 
 **Videos:**  
 
-![Watch full functions Demo](https://youtube.com/shorts/pA8182BMDGk?si=FSR-i6L9WVgVPzrC)
+![Watch full functions Demo](https://youtube.com/shorts/pA8182BMDGk)
 
 **Screenshots:**  
 
