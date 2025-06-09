@@ -73,6 +73,8 @@ class MainApplication(tk.Tk):
             )
         )
 
+        self.entry_canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
         # Chart frame (hidden initially)
         self.chart_frame = tk.Frame(self, bg="white")
         self.chart_frame.grid(row=0, column=0, sticky="nsew")
@@ -103,16 +105,19 @@ class MainApplication(tk.Tk):
 
         # add a delete button fo
         self.delete_button = tk.Button(
-        button_frame, text="Delete Selected", command=self.delete_selected_record, bg="red", fg="white")
+        button_frame, text="Delete Selected", command=self.delete_selected_record, bg="#e63946", fg="white")
         self.delete_button.grid(row=0, column=0, pady=(0, 5), sticky="ew")
 
         self.ai_advice_button = tk.Button(
-        button_frame, text="Get AI Advice", command=self.get_ai_advice, bg="#4CAF50", fg="white")
+        button_frame, text="Get AI Advice", command=self.get_ai_advice, bg="#3a86ff", fg="white")
         self.ai_advice_button.grid(row=1, column=0, pady=(5, 0), sticky="ew")
 
         # Add entry button to the entry frame
-        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry, bg="#4CAF50", fg="white")
+        self.add_entry_button = tk.Button(self.entry_frame, text="Add Entry", command=self.add_entry, bg="#a8dadc", fg="black")
         self.add_entry_button.grid(row=5, column=0, columnspan=4, pady=5)
+
+    def _on_mousewheel(self, event):
+        self.entry_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
     def create_menu(self):
         # add menu bar
@@ -211,7 +216,7 @@ class MainApplication(tk.Tk):
         self.category_new_subcategory_combo_box.grid(row=16, column=1, padx=10, pady=5)
 
         # Button to add the new category
-        self.add_category_button = tk.Button(self.entry_frame, text="Add Entry with new Sub Category", command=self.add_new_subcategory,bg="#4CAF50", fg="white") 
+        self.add_category_button = tk.Button(self.entry_frame, text="Add Entry with new Sub Category", command=self.add_new_subcategory,bg="#a8dadc", fg="black") 
         self.add_category_button.grid(row=16, column=3, padx=10, pady=5, )
 
     def create_treeview_table(self):

@@ -184,7 +184,8 @@ After installing the prerequisites and running the application (`python main.py`
 - [x] Add security features to restrict what user can enter in the entry fields (e.g., only numbers for amounts)
 - [x] Allow users to add new subcategories and total and charts will refresh after new entries
 - [x] Add warning when there's no data for the chart
-- [ ] Add AI-powered insights on spending habits
+- [x] Add AI-powered insights on spending habits
+- [x] Vertical Scroll bar and mouse scroll
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
