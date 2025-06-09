@@ -27,7 +27,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Finance Tracker
 
-This simple app is designed to manage personal finance Tracker.
+This app is designed to manage personal finance Tracker.
 
 It has the following features:
 * Enter income/expense amount, and show entries in a table view
@@ -36,6 +36,9 @@ It has the following features:
 * Expense pie chart and Income & Expense bar chart for better visual comparasion
 * Use real data user entered in the entry frame to populate the charts
 * Message alert for overspending and approaching limit
+* Add a new subcategory to the table
+* Delete entry from table by clicking on "Delete selected" button
+* Connect to the Azure AI to provide AI advice on spending habits and saving plans
 
 Of course, I have many ideas for the future features of this app, like AI insights on spending habits, etc.
 
@@ -84,6 +87,7 @@ To get a local copy up and running follow these steps.
 
 - Python 3.8 or higher  
 - pip (Python package manager, usually included with Python)
+- Optional (for using "Get AI advice") Set up AI Azure account and set up .env file with project connection string and Agent id 
 
 Required Python packages:
 - `matplotlib`
@@ -149,9 +153,9 @@ After installing the prerequisites and running the application (`python main.py`
 
 ---
 
-**Videos:**  
+**Demo Video:**  
 
-![Watch full functions Demo](https://youtube.com/shorts/pA8182BMDGk)
+![Watch full functions Demo] -> https://youtube.com/shorts/pA8182BMDGk
 
 **Screenshots:**  
 

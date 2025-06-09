@@ -14,7 +14,7 @@ env/
 
 # Environment variable files
 .env
-.env.*
+
 
 # Distribution / packaging
 .Python
