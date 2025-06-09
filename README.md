@@ -149,6 +149,10 @@ After installing the prerequisites and running the application (`python main.py`
 
 ---
 
+**Videos:**  
+
+![Watch full functions Demo](https://www.youtube.com/shorts/pA8182BMDGk)
+
 **Screenshots:**  
 
 ![Start Screen](images/startscreen.png)
