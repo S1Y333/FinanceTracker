@@ -111,6 +111,7 @@ Required Python packages:
 3. **Install required packages**
    ```sh
    pip install matplotlib
+   pip install azure-ai-projects azure-identity
    ```
 
 4. **Run the application**
