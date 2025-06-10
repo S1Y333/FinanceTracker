@@ -166,6 +166,7 @@ After installing the prerequisites and running the application (`python main.py`
 ![Income vs Expense Bar Chart](images/bar_chart.png)
 ![Balance Reminder](images/balance_reminder.png)
 ![Overspending Alert](images/overspending_alert.png)
+![AI Advice](images/aiadvice.png)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
