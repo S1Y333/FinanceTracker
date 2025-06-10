@@ -111,10 +111,14 @@ Required Python packages:
 3. **Install required packages**
    ```sh
    pip install matplotlib
-   pip install azure-ai-projects azure-identity
+   pip install azure-ai-projects azure-identity python-dotenv
    ```
-
-4. **Run the application**
+4. **(Optional) Prepare .env file** (Only for Get AI advice part)
+   - create .env file and .gitignore file (search for .gitignore file template and save in your project folder)
+   - copy .env.template content to .env
+   - add your Azure AI project connection string and AI assistant id 
+   
+5. **Run the application**
    ```sh
    python main.py
    ```
